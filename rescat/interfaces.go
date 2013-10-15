@@ -3,3 +3,20 @@
 // license that can be found in the LICENSE file.
 
 package rescat
+
+import (
+	"io"
+)
+
+// Fetcher interface to be provided for FS, HTTP etc...
+type Fetcher interface {
+	Fetch(n string) (b []byte, err error)
+}
+
+// Maybe doesn't need to be an interface?
+type Provider interface {
+	// return the concatinated string as a ??? ready to write to
+	// and HTTP Response
+	Provide(names []string) (r io.Reader, err error)
+	Fetcher
+}
