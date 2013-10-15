@@ -24,6 +24,8 @@ TODO: Add some copy about the history of: perbal, mod_concat, Steve Souders [Rul
 
 ### Goals
 
+While this software may be moot with the advent and widespread adoption of SPDY or HTTP 2.0, it may still prove useful for some period of time until all agents support SPDY or HTTP 2.0. Additionally it serves as a well know problem with a (roughly) fixed scope, as well as sufficient complexity to leverage and learn a significant set of features in Go. 
+
 This package is a library which implements an [http.Handle](http://golang.org/pkg/net/http/#Handle) or [http.HandleFunc](http://golang.org/pkg/net/http/#HandleFunc) with configurable providers usable within any generic web framework as well as provide examples of such integration.
 
 Additionally, it provides an http server implementation which allows configuring multiple domains with multiple providers and handlers.
