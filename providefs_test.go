@@ -64,7 +64,7 @@ func TestProvideFetchFails(t *testing.T) {
 }
 
 func TestProvidesFS(t *testing.T) {
-	names := []string{"../testfiles/zero.txt", "../testfiles/one.txt", "../testfiles/two.txt"}
+	names := []string{"testfiles/zero.txt", "testfiles/one.txt", "testfiles/two.txt"}
 	pi := &Provide{"", &FetchFile{}, names, ""}
 	for i, n := range pi.Names {
 		expected := strconv.Itoa(i)
@@ -79,7 +79,7 @@ func TestProvidesFS(t *testing.T) {
 }
 
 func TestProvidesFSConcat(t *testing.T) {
-	pi := &Provide{"", &FetchFile{}, []string{"../testfiles/zero.txt", "../testfiles/one.txt", "../testfiles/two.txt"}, ""}
+	pi := &Provide{"", &FetchFile{}, []string{"testfiles/zero.txt", "testfiles/one.txt", "testfiles/two.txt"}, ""}
 	concat, err := pi.Provide()
 	if err != nil {
 		t.Errorf("unexpected Error:%s", err)
