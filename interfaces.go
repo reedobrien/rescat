@@ -10,6 +10,7 @@ import (
 
 // Fetcher interface to be provided for FS, HTTP etc...
 type Fetcher interface {
+	// Fetch the resource n and return it as a byte array.
 	Fetch(n string) (b []byte, err error)
 }
 
