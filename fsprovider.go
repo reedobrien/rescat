@@ -25,8 +25,15 @@ func (f *FetchFile) Fetch(n string) (b []byte, err error) {
 
 // Provide concatenated files from the file system
 type Provide struct {
-	Names []string
+	// The base for fetching files. I.e. /some/path or http://eample.com/some/path
+	Base string
+	// A concrete implementation of Fetcher. I.e. FetchFile
 	Fetcher
+	// a list of the files to be concatinated
+	Names []string
+	// The path provided in the request. In the case of http://exsmple.com/static/css/
+	// the calue  would be static/css
+	Path string
 }
 
 // TODO: add concurrency to fetch file contents
