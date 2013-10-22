@@ -8,6 +8,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
+	"strings"
 )
 
 var FailedFetch = errors.New("Failed to fetch resource")
@@ -25,10 +26,10 @@ func (f *FetchFile) Fetch(n string) (b []byte, err error) {
 
 // Provide concatenated files from the file system
 type Provide struct {
-	// The base for fetching files. I.e. /some/path or http://eample.com/some/path
-	Base string
 	// A concrete implementation of Fetcher. I.e. FetchFile
 	Fetcher
+	// The base for fetching files. I.e. /some/path or http://eample.com/some/path
+	Base string
 	// a list of the files to be concatinated
 	Names []string
 	// The path provided in the request. In the case of http://exsmple.com/static/css/
@@ -42,7 +43,7 @@ type Provide struct {
 // Provide concatenated output
 func (p *Provide) Provide() (b []byte, err error) {
 	for _, n := range p.Names {
-		f, err := p.Fetch(n)
+		f, err := p.Fetch(strings.Join([]string{p.Path, n}, "/"))
 		if err != nil {
 			if err == FailedFetch {
 				return nil, err
@@ -69,7 +70,9 @@ func concatenate(c []byte, f []byte) (b []byte, err error) {
 func getFileContents(filename string) (b []byte, err error) {
 	b, err = ioutil.ReadFile(filename)
 	if err != nil {
-		log.Fatalln("error opening file:", filename, err)
+		log.Println("error opening file:", filename, err)
+		err = errors.New("not found")
+		return nil, err
 	}
 	return b, err
 }
