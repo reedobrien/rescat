@@ -90,3 +90,23 @@ func TestProvidesFSConcat(t *testing.T) {
 		t.Errorf("Expected %s, got %s", expected, concat)
 	}
 }
+
+func TestProvidesFSFailedFetch(t *testing.T) {
+	names := []string{"nothere/fails", "testfiles/one.txt", "testfiles/two.txt"}
+	pi := &Provide{&FetchFile{}, "", names, ""}
+	_, err := pi.Provide()
+	if err == nil {
+		t.Error("Should have failed but didn't")
+	}
+	if err != FailedFetch {
+		t.Errorf("unexpected Error:%s", err)
+	}
+}
+
+func BenchmarkProvideFS(b *testing.B) {
+	names := []string{"testfiles/zero.txt", "testfiles/one.txt", "testfiles/two.txt"}
+	pi := &Provide{&FetchFile{}, "", names, ""}
+	for i := 0; i < b.N; i++ {
+		_, _ = pi.Provide()
+	}
+}
