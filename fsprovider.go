@@ -8,7 +8,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
-	"strings"
+	"path/filepath"
 )
 
 var FailedFetch = errors.New("Failed to fetch resource")
@@ -43,7 +43,7 @@ type Provide struct {
 // Provide concatenated output
 func (p *Provide) Provide() (b []byte, err error) {
 	for _, n := range p.Names {
-		f, err := p.Fetch(strings.Join([]string{p.Path, n}, "/"))
+		f, err := p.Fetch(filepath.Join(p.Path, n))
 		if err != nil {
 			if err == FailedFetch {
 				return nil, err
