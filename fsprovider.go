@@ -8,7 +8,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
-	"strings"
+	"path/filepath"
 )
 
 var FailedFetch = errors.New("Failed to fetch resource")
@@ -43,18 +43,13 @@ type Provide struct {
 // Provide concatenated output
 func (p *Provide) Provide() (b []byte, err error) {
 	for _, n := range p.Names {
-		f, err := p.Fetch(strings.Join([]string{p.Path, n}, "/"))
+		f, err := p.Fetch(filepath.Join(p.Path, n))
 		if err != nil {
 			if err == FailedFetch {
 				return nil, err
-			} else {
-				log.Fatalln("Error in p.Provide", err)
 			}
 		}
-		b, err = concatenate(b, f)
-		if err != nil {
-			log.Fatal(err)
-		}
+		b = concatenate(b, f)
 	}
 	return b, err
 }
@@ -62,16 +57,16 @@ func (p *Provide) Provide() (b []byte, err error) {
 // TODO: pass &c and modify in place
 
 // concatenate two byte slices
-func concatenate(c []byte, f []byte) (b []byte, err error) {
-	b = append(c, f...)
-	return b, err
+func concatenate(c []byte, f []byte) []byte {
+	b := append(c, f...)
+	return b
 }
 
 func getFileContents(filename string) (b []byte, err error) {
 	b, err = ioutil.ReadFile(filename)
 	if err != nil {
 		log.Println("error opening file:", filename, err)
-		err = errors.New("not found")
+		err = FailedFetch
 		return nil, err
 	}
 	return b, err
